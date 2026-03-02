@@ -2,7 +2,7 @@
 
 # TRACE: Your Diffusion Model Is Secretly an Instance Edge Detector
 
-### ⭐ ICLR 2026 Oral Presentation (Top 1.18%, 223/18,862)
+### ⭐ ICLR 2026 Oral Presentation (Top 1.13%, 223/19,814)
 
 [![Project Page](https://img.shields.io/badge/Project-Page-gold?style=for-the-badge)](https://shjo-april.github.io/TRACE)
 [![Paper](https://img.shields.io/badge/Paper-PDF-red?style=for-the-badge)](https://openreview.net/pdf?id=BjElYlJKMj)
