@@ -9,7 +9,7 @@
 [![OpenReview](https://img.shields.io/badge/OpenReview-Forum-8c1b13?style=for-the-badge)](https://openreview.net/forum?id=BjElYlJKMj)
 [![arXiv](https://img.shields.io/badge/arXiv-2503.07982-b31b1b?style=for-the-badge)](https://arxiv.org/abs/2503.07982)
 
-[Sanghyun Jo](https://shjo-april.github.io/)<sup>1*</sup>, [Ziseok Lee](https://ziseoklee.github.io/)<sup>2*</sup>, [Wooyeol Lee](https://thisiswooyeol.github.io/)<sup>2</sup>, [Jonghyun Choi](https://ppolon.github.io/)<sup>2</sup>, [Jaesik Park](https://jaesik.info/)<sup>2†</sup>, [Kyungsu Kim](https://aibl.snu.ac.kr/team/pi-information)<sup>2†</sup>
+[Sanghyun Jo](https://shjo-april.github.io/)<sup>1*</sup>, [Ziseok Lee](https://ziseoklee.github.io/)<sup>2*</sup>, [Wooyeol Lee](https://thisiswooyeol.github.io/)<sup>2</sup>, [Jonghyun Choi](https://ppolon.github.io/)<sup>2</sup>, [Jaesik Park](https://jaesik.info/)<sup>2†</sup>, [Kyungsu Kim](https://aibl.snu.ac.kr/pi-information)<sup>2†</sup>
 
 <sup>1</sup>OGQ &nbsp;&nbsp; <sup>2</sup>Seoul National University  
 <sup>*</sup>Equal contribution &nbsp;&nbsp; <sup>†</sup>Corresponding authors
