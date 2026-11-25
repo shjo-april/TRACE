@@ -1,0 +1,122 @@
+{
+ "title": "TRACE",
+ "badge": ["ICLR 2026", "Oral"],
+ "subtitle": "Your Diffusion Model Is Secretly an Instance Edge Detector",
+ "tabs": ["1 · Observation", "2 · Emergence", "3 · Edge", "4 · Masks", "5 · Results"],
+ "observation": {
+  "head": "Diffusion self-attention briefly reveals instance-level structure",
+  "note": "Paper Fig. 1(a) · attention maps of a text-to-image diffusion model during the reverse process (τ: denoising timestep)",
+  "steps": ["999", "699", "499", "099"],
+  "rows": [["Self-attention", "fig1a_sa_%s.jpg"], ["Cross-attention", "fig1a_ca_%s.jpg"]],
+  "highlight": "699",
+  "image": "fig1a_image.jpg",
+  "timeline": "Reverse process · prompt: \"Two Cats\" · from noise to the image",
+  "messages": [
+   "Early in denoising (τ = 999), self-attention is almost indistinguishable from noise",
+   "At τ = 699, self-attention separates the two cats into different colours",
+   "At τ = 499, the two cats share one colour again: instance structure turns into semantic content",
+   "Cross-attention remains semantic at every step, even with the prompt",
+   "Instance cues appear in self-attention at specific steps of the denoising process"
+  ],
+  "card": ["Observation", "Cross-attention does not separate the two cats, even with the prompt.", "Self-attention does, at specific timesteps."]
+ },
+ "emergence": {
+  "head": "Instance Emergence Point (IEP): the step where instance structure is most pronounced",
+  "note": "Top: paper Fig. 1(b) and Eq. 1 · bottom: paper Fig. 8, top row (self-attention maps visualised with PCA)",
+  "image": "fig1b_image.jpg",
+  "steps": [
+   ["fig1b_sa_099.jpg", "Semantic", "base"],
+   ["fig1b_sa_199.jpg", "Semantic", "base"],
+   ["fig1b_sa_399.jpg", "Instance (IEP)", "ours"],
+   ["fig1b_sa_799.jpg", "Towards noise", "muted"]
+  ],
+  "timeline": "Forward process on a real image · null-text prompt · from the image to noise",
+  "formula": "t* = argmax_{t} D_{KL}( SA(X_{t_{prev}}) ‖ SA(X_{t}) )",
+  "formula_text": "IEP: the timestep t* where consecutive self-attention maps SA differ the most (KL divergence)",
+  "backbones_title": "The same image in three diffusion backbones",
+  "backbones": [
+   ["fig8_gt.jpg", "Image and ground truth"],
+   ["fig8_sd15_iep.jpg", "SD1.5"],
+   ["fig8_sdxl_iep.jpg", "SDXL"],
+   ["fig8_sd35l_iep.jpg", "SD3.5-L"],
+   ["fig8_sd35l_no_iep.jpg", "SD3.5-L, without IEP"]
+  ],
+  "messages": [
+   "Inversion runs the other way: self-attention starts semantic (the two dogs share one colour)",
+   "One stride later (τ = 199), the map is still semantic",
+   "At τ = 399 the two dogs separate: the instance emergence point of this image",
+   "Further steps dissolve the structure into noise",
+   "With IEP, self-attention separates the two dogs in SD1.5, SDXL and SD3.5-L; without IEP it does not"
+  ]
+ },
+ "edge": {
+  "head": "From self-attention to instance edges: ABDiv and one-step self-distillation",
+  "note": "Paper Figs. 1(b), 4 and 5, Eq. 2 · red marks: fragmented edges before training · green circles: closed after training · latency: Sec. 5",
+  "image": "fig4_input.jpg",
+  "sa": "fig1b_sa_399.jpg",
+  "pseudo": "fig4_before.png",
+  "training": [["fig4_20.png", "Distillation: 20% of training"], ["fig4_40.png", "40% of training"], ["fig4_after.png", "After training: Ê in one step"]],
+  "abdiv": {
+   "title": "Attention Boundary Divergence",
+   "formula": ["ABDiv(SA)_{i,j} =", "    D_{KL}( SA_{i+1,j} ‖ SA_{i−1,j} )", "+ D_{KL}( SA_{i,j+1} ‖ SA_{i,j−1} )"],
+   "text": "KL divergence between opposite neighbours of a pixel.",
+   "values": [["Boundary pixel", "0.114"], ["Interior pixel", "0.027"]],
+   "source": "example of paper Fig. 5"
+  },
+  "speed": {
+   "title": "One step at inference",
+   "value": "3,682 ms → 45 ms",
+   "sub": "per image · about 81× faster",
+   "text": "A single forward pass at t = 0 replaces the per-image IEP and ABDiv."
+  },
+  "messages": [
+   "The self-attention map at the emergence point, SA(X_{t*}), is the instance-aware representation",
+   "ABDiv turns it into a pseudo edge map E: the divergence is high on instance boundaries",
+   "One-step self-distillation: an edge decoder is trained with E as the pseudo label",
+   "During training, gaps in the fragmented edges close",
+   "After training, one forward pass predicts connected instance edges, without IEP or ABDiv"
+  ]
+ },
+ "masks": {
+  "head": "Instance edges reconnect fragmented masks and separate adjacent objects",
+  "note": "Paper Fig. 2 (MaskCut) and Fig. 9(a) (DHR) · the white dotted marks are the paper's: corrected boundaries and converted regions",
+  "columns": [["Ground truth", "muted"], ["Baseline", "base"], ["TRACE edge (Ours)", "ours"], ["Baseline with TRACE", "ours"]],
+  "rows": [
+   {"files": ["fig2_r1_gt.jpg", "fig2_r1_baseline.png", "fig2_r1_edge.png", "fig2_r1_trace.png"], "aspect": 1.0716,
+    "task": "Unsupervised instance segmentation", "baseline": "Baseline: MaskCut", "effect": "A fragmented mask is reconnected"},
+   {"files": ["fig2_r2_gt.jpg", "fig2_r2_baseline.png", "fig2_r2_edge.png", "fig2_r2_trace.png"], "aspect": 1.0716,
+    "task": "Unsupervised instance segmentation", "baseline": "Baseline: MaskCut", "effect": "Adjacent objects are separated"},
+   {"files": ["fig9_gt.png", "fig9_dhr.png", "fig9_edge.png", "fig9_dhr_trace.png"], "aspect": 1.3331,
+    "task": "Tag-supervised panoptic segmentation", "baseline": "Baseline: DHR", "effect": "A semantic mask becomes a panoptic mask"}
+  ],
+  "messages": [
+   "Existing methods merge adjacent objects of the same class or fragment single instances",
+   "TRACE predicts instance edges for the same images, without any annotation",
+   "Used as separators, the edges split merged regions along instance boundaries"
+  ]
+ },
+ "results": {
+  "head": "Instance edges without prompts, points, boxes or masks",
+  "note": "Paper Fig. 10, Table 6 (ODS: COCO 2014 val) and Sec. 6 (AP with each edge map in the same pipeline) · cards: Tables 1, 2 and 5, Sec. 5",
+  "strip_title": "Top: edge map of each detector · bottom: the ProMerge mask refined with that edge map",
+  "columns": [
+   ["gt", "Reference", "ground truth · ProMerge", null, null],
+   ["trace", "TRACE (Ours)", "instance-aware edge", "0.889", "9.4"],
+   ["canny", "Canny", "gradient edge", "0.129", "1.2"],
+   ["hed", "HED", "texture-contrast edge", "0.347", "3.7"],
+   ["pidinet", "PiDiNet", "texture-contrast edge", "0.362", "4.1"],
+   ["diffusionedge", "DiffusionEdge", "texture-contrast edge", "0.428", "4.3"]
+  ],
+  "metrics": ["ODS (edge quality)", "AP^{mk} with this edge"],
+  "cards": [
+   ["3.1 → 8.2", "Unsupervised instance seg.", "AP^{mk} · ProMerge → with TRACE", "COCO 2014", "+5.1 over the baseline"],
+   ["69.8 / 43.1", "Panoptic seg. from tags only", "PQ · DHR + TRACE (Swin-L)", "VOC 2012 / COCO 2017", "point-supervised EPLD: 68.5 / 41.0"],
+   ["81× faster", "One-step self-distillation", "3,682 ms → 45 ms per image", "a single forward pass at t = 0", "no IEP or ABDiv at inference"],
+   ["7.1 vs 4.1", "Diffusion vs non-diffusion", "AP^{mk} of TRACE on COCO 2014", "PixArt-α (0.6B): 7.1", "Qwen2.5-VL (72B): 4.1"]
+  ],
+  "line": "Instance edges decoded from a pretrained text-to-image diffusion model · no instance-level labels",
+  "messages": [
+   "Conventional edge detectors respond to texture and intensity changes, not to instances"
+  ]
+ }
+}

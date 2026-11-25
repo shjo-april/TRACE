@@ -16,6 +16,10 @@
 
 </div>
 
+<div align="center">
+  <img src="./assets/hero.gif" width="100%" alt="TRACE in five scenes: instance cues in diffusion self-attention, the instance emergence point, ABDiv and one-step self-distillation, masks refined with the instance edges, and the results">
+</div>
+
 ---
 
 > **🚧 Code, pretrained models, and presentation materials will be released in April 2026. Please stay tuned!**  
@@ -201,6 +205,19 @@ TRACE/
 ├── requirements.txt
 └── README.md
 ```
+
+## 🎬 Reproduce the Hero GIF
+
+The GIF at the top is composed from panels of the paper's own figures (`hero_gif/panels/`) with the labels and numbers in `hero_gif/scenes.json`. It needs no GPU and no model.
+
+```bash
+# write assets/hero.gif (Pillow 8.2 or later, NumPy)
+python hero_gif/build_gif.py
+```
+
+- Five scenes: the observation (Fig. 1a), the instance emergence point (Fig. 1b, Eq. 1, Fig. 8), ABDiv and one-step self-distillation (Fig. 4, Eq. 2, Fig. 5), the masks (Fig. 2, Fig. 9a), and the results (Fig. 10, Tables 1, 2, 5, 6).
+- Every number in the GIF is taken from the paper.
+- The committed GIF was rendered on Windows with Segoe UI. On other systems the script falls back to the DejaVu Sans bundled with matplotlib.
 
 ## 📖 Citation
 
